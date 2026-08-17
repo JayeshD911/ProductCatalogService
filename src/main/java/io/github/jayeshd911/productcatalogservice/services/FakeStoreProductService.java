@@ -7,12 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FakeStoreProductService implements IProductService {
 
-    private RestTemplate restTemplate;
+    final private RestTemplate restTemplate;
 
     private FakeStoreProductService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -41,7 +42,22 @@ public class FakeStoreProductService implements IProductService {
 
     @Override
     public List<Product> getAllProducts() {
+        List<Product> products = new ArrayList<>();
+
         // Implement the logic to fetch all products from FakeStore API
+        ResponseEntity<FakestoreProductDTO[]> response = restTemplate.getForEntity("https://fakestoreapi.com/products",
+                FakestoreProductDTO[].class);
+        if (response.hasBody() &&
+            response.getStatusCode().equals(HttpStatusCode.valueOf(200))){
+            FakestoreProductDTO[] fakestoreProductDTOS = response.getBody();
+
+            for(FakestoreProductDTO fakestoreProductDTO : fakestoreProductDTOS){
+                products.add(fakestoreProductDTO.from());
+            }
+
+            return products;
+        }
+
         return null;
     }
 

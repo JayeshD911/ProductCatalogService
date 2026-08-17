@@ -30,26 +30,36 @@ public class ProductController {
     @GetMapping("/products/{id}")
     ResponseEntity<ProductDTO> getProductById(@PathVariable("id") Long id) {
 
-        if(id == null || id <= 1) {
+        if (id == null || id <= 1) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        ProductDTO productDTO = new ProductDTO();
+//        ProductDTO productDTO = new ProductDTO();
         Product product = productService.getProductById(id);
 
-        if(product == null) {
+        if (product == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        productDTO = product.convert();
+        ProductDTO productDTO = product.convert();
 
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
     @GetMapping("/products")
     List<ProductDTO> getAllProducts() {
-        List<ProductDTO> products = new ArrayList<>();
-        return products;
-    }
 
+        List<ProductDTO> ProductResponseDTOs = new ArrayList<>();
+
+        List<Product> products = productService.getAllProducts();
+
+        if (products != null) {
+            for (Product product : products) {
+                ProductResponseDTOs.add(product.convert());
+            }
+        }
+
+        return ProductResponseDTOs;
+
+    }
 }
