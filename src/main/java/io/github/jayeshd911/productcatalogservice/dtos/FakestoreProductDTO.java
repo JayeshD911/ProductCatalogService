@@ -30,6 +30,8 @@ public class FakestoreProductDTO {
     }
 }
 
+
+//From fakestore docs
 //[
 //        {
 //        "id": 0,
