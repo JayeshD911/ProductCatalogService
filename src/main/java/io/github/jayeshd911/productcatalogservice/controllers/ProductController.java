@@ -41,7 +41,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        ProductDTO productDTO = product.convert();
+        ProductDTO productDTO = product.convertToProductDTO();
 
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
@@ -49,17 +49,29 @@ public class ProductController {
     @GetMapping("/products")
     List<ProductDTO> getAllProducts() {
 
-        List<ProductDTO> ProductResponseDTOs = new ArrayList<>();
+        List<ProductDTO> productResponseDTOs = new ArrayList<>();
 
         List<Product> products = productService.getAllProducts();
 
         if (products != null) {
             for (Product product : products) {
-                ProductResponseDTOs.add(product.convert());
+                productResponseDTOs.add(product.convertToProductDTO());
             }
         }
 
-        return ProductResponseDTOs;
+        return productResponseDTOs;
 
+    }
+
+    @PutMapping("/products/{id}")
+    public ProductDTO updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productRequestDTO) {
+//        ProductDTO productResponseDTO = new ProductDTO();
+
+        Product product = productService.replaceProduct(productRequestDTO.convertToProduct(), id);
+
+        if (product != null) {
+            return product.convertToProductDTO();
+        }
+        return null;
     }
 }

@@ -15,7 +15,7 @@ public class FakestoreProductDTO {
     private String category;
     private String image;
 
-    public Product from () {
+    public Product convertToProduct () {
         Product product = new Product();
         product.setId(this.getId());
         product.setName(this.getTitle());
