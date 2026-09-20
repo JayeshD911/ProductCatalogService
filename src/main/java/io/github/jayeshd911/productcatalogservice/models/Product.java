@@ -1,6 +1,7 @@
 package io.github.jayeshd911.productcatalogservice.models;
 
 import io.github.jayeshd911.productcatalogservice.dtos.CategoryDTO;
+import io.github.jayeshd911.productcatalogservice.dtos.FakestoreProductDTO;
 import io.github.jayeshd911.productcatalogservice.dtos.ProductDTO;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,23 @@ public class Product extends BaseModel {
     private String imageUrl;
     private Category category;
 
-    public ProductDTO convert() {
+    public FakestoreProductDTO convertTofakestoreProductDTO() {
+        FakestoreProductDTO fakestoreProductDTO = new FakestoreProductDTO();
+        fakestoreProductDTO.setId(this.getId());
+        fakestoreProductDTO.setTitle(this.getName());
+        fakestoreProductDTO.setDescription(this.getDescription());
+        fakestoreProductDTO.setPrice(this.getPrice());
+        fakestoreProductDTO.setImage(this.getImageUrl());
+        if (this.getCategory() != null) {
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setId(this.getCategory().getId());
+            categoryDTO.setName(this.getCategory().getName());
+            categoryDTO.setDescription(this.getCategory().getDescription());
+            fakestoreProductDTO.setCategory(categoryDTO.getName());
+        }
+        return fakestoreProductDTO;
+    }
+    public ProductDTO convertToProductDTO() {
         ProductDTO dto = new ProductDTO();
         dto.setId(this.getId());
         dto.setName(this.getName());
