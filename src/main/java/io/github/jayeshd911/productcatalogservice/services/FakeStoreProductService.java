@@ -2,6 +2,8 @@ package io.github.jayeshd911.productcatalogservice.services;
 
 import io.github.jayeshd911.productcatalogservice.dtos.FakestoreProductDTO;
 import io.github.jayeshd911.productcatalogservice.models.Product;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,15 @@ public class FakeStoreProductService implements IProductService {
 
     final private RestTemplate restTemplate;
 
-    private FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+//    public <T> ResponseEntity<T> putForEntity(String url, Object request, Class<T> responseType, Object... uriVariables) {
+//        HttpEntity<Object> requestEntity = new HttpEntity<>(request);
+//        return restTemplate.exchange(url, HttpMethod.PUT, requestEntity, responseType, uriVariables);
+//    }
+
 
     @Override
     public Product getProductById(Long id) {
@@ -64,6 +72,31 @@ public class FakeStoreProductService implements IProductService {
     @Override
     public Product createProduct(Product product) {
         // Implement the logic to create a new product in FakeStore API
+        return null;
+    }
+
+    @Override
+    public Product replaceProduct(Product product, Long id) {
+//        FakestoreProductDTO fakestoreProductDTO = new FakestoreProductDTO();
+//        ResponseEntity<FakestoreProductDTO> response = putForEntity("https://fakestoreapi.com/products/{id}",
+//                product,
+//                FakestoreProductDTO.class,
+//                id);
+
+        FakestoreProductDTO payload = product.convertTofakestoreProductDTO();
+
+        ResponseEntity<FakestoreProductDTO> response = restTemplate.exchange(
+                "https://fakestoreapi.com/products/{id}",
+                HttpMethod.PUT,
+                new HttpEntity<>(payload),
+                FakestoreProductDTO.class,
+                id
+        );
+
+        if (response.hasBody() && response.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
+            FakestoreProductDTO fakestoreProductDTO1 = response.getBody();
+            return fakestoreProductDTO1.from();
+        }
         return null;
     }
 }
