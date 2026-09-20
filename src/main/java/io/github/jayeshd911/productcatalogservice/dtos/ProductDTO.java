@@ -27,7 +27,7 @@ public class ProductDTO {
             categoryDTO.setId(this.getCategory().getId());
             categoryDTO.setName(this.getCategory().getName());
             categoryDTO.setDescription(this.getCategory().getDescription());
-            product.setCategory(CategoryDTO.convert());
+            product.setCategory(CategoryDTO.convertToCategory());
         }
         return product;
     }
