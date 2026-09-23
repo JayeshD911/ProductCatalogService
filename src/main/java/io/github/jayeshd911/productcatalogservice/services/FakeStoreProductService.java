@@ -1,13 +1,14 @@
 package io.github.jayeshd911.productcatalogservice.services;
 
+import io.github.jayeshd911.productcatalogservice.clients.FakeStoreAPIClient;
 import io.github.jayeshd911.productcatalogservice.dtos.FakestoreProductDTO;
 import io.github.jayeshd911.productcatalogservice.models.Product;
-import org.springframework.http.HttpEntity;
+//import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
+//import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+//import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +16,22 @@ import java.util.List;
 @Service
 public class FakeStoreProductService implements IProductService {
 
-    final private RestTemplate restTemplate;
-
-    public FakeStoreProductService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+//    final private RestTemplate restTemplate;
+//
+//    public FakeStoreProductService(RestTemplate restTemplate) {
+//        this.restTemplate = restTemplate;
+//    }
 
 //    public <T> ResponseEntity<T> putForEntity(String url, Object request, Class<T> responseType, Object... uriVariables) {
 //        HttpEntity<Object> requestEntity = new HttpEntity<>(request);
 //        return restTemplate.exchange(url, HttpMethod.PUT, requestEntity, responseType, uriVariables);
 //    }
+
+    final private FakeStoreAPIClient fakeStoreAPIClient;
+
+    public FakeStoreProductService(FakeStoreAPIClient fakeStoreAPIClient) {
+        this.fakeStoreAPIClient = fakeStoreAPIClient;
+    }
 
 
     @Override
@@ -36,14 +43,12 @@ public class FakeStoreProductService implements IProductService {
 //
 //        return fakestoreProductDTO.from(fakestoreProductDTO);
 
-
-        ResponseEntity<FakestoreProductDTO> fakestoreDTOResponseEntity = restTemplate.getForEntity("https://fakestoreapi.com/products/{id}",
+        ResponseEntity<FakestoreProductDTO> response = fakeStoreAPIClient.getForEntity("https://fakestoreapi.com/products/{id}",
                 FakestoreProductDTO.class,
                 id);
-        if (fakestoreDTOResponseEntity.hasBody() &&
-                fakestoreDTOResponseEntity.getStatusCode().equals(
-                        HttpStatusCode.valueOf(200))) {
-            return fakestoreDTOResponseEntity.getBody().convertToProduct();
+        if (fakeStoreAPIClient.validateResponse(response)) {
+
+            return response.getBody().convertToProduct();
         }
         return null;
     }
@@ -53,10 +58,9 @@ public class FakeStoreProductService implements IProductService {
         List<Product> products = new ArrayList<>();
 
         // Implement the logic to fetch all products from FakeStore API
-        ResponseEntity<FakestoreProductDTO[]> response = restTemplate.getForEntity("https://fakestoreapi.com/products",
+        ResponseEntity<FakestoreProductDTO[]> response = fakeStoreAPIClient.getForEntity("https://fakestoreapi.com/products",
                 FakestoreProductDTO[].class);
-        if (response.hasBody() &&
-            response.getStatusCode().equals(HttpStatusCode.valueOf(200))){
+        if (fakeStoreAPIClient.validateResponse(response)){
             FakestoreProductDTO[] fakestoreProductDTOS = response.getBody();
 
             for(FakestoreProductDTO fakestoreProductDTO : fakestoreProductDTOS){
@@ -83,17 +87,16 @@ public class FakeStoreProductService implements IProductService {
 //                FakestoreProductDTO.class,
 //                id);
 
-        FakestoreProductDTO payload = product.convertTofakestoreProductDTO();
+        FakestoreProductDTO fakestoreProductDTO = product.convertTofakestoreProductDTO();
 
-        ResponseEntity<FakestoreProductDTO> response = restTemplate.exchange(
-                "https://fakestoreapi.com/products/{id}",
-                HttpMethod.PUT,
-                new HttpEntity<>(payload),
+        ResponseEntity<FakestoreProductDTO> response = fakeStoreAPIClient.requestForEntity(
+                HttpMethod.PUT,"https://fakestoreapi.com/products/{id}",
+                fakestoreProductDTO,
                 FakestoreProductDTO.class,
                 id
         );
 
-        if (response.hasBody() && response.getStatusCode().equals(HttpStatusCode.valueOf(200))) {
+        if (fakeStoreAPIClient.validateResponse(response)) {
             FakestoreProductDTO fakestoreProductDTO1 = response.getBody();
             return fakestoreProductDTO1.convertToProduct();
         }

@@ -30,8 +30,9 @@ public class ProductController {
     @GetMapping("/products/{id}")
     ResponseEntity<ProductDTO> getProductById(@PathVariable("id") Long id) {
 
-        if (id == null || id <= 1) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (id == null || id < 1) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("Invalid product ID: " + id);
         }
 
 //        ProductDTO productDTO = new ProductDTO();
@@ -74,4 +75,5 @@ public class ProductController {
         }
         return null;
     }
+
 }
