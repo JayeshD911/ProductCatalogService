@@ -3,6 +3,7 @@ package io.github.jayeshd911.productcatalogservice.controllers;
 import io.github.jayeshd911.productcatalogservice.dtos.ProductDTO;
 import io.github.jayeshd911.productcatalogservice.models.Product;
 import io.github.jayeshd911.productcatalogservice.services.IProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class ProductController {
     IProductService productService;
 
     // Constructor injection
-    public ProductController(IProductService productService) {
+    public ProductController(@Qualifier("storageProductService") IProductService productService) {
         this.productService = productService;
     }
 
