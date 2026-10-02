@@ -13,9 +13,8 @@ public class CategoryDTO  {
 
     public static Category convertToCategory() {
         Category category = new Category();
-        category.setId(null);
         category.setName(null);
         category.setDescription(null);
-        return new Category();
+        return category;
     }
 }
