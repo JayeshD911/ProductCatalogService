@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class ProductController {
 
-    IProductService productService;
+    private final IProductService productService;
 
     // Constructor injection
     public ProductController(@Qualifier("storageProductService") IProductService productService) {
@@ -22,10 +22,9 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    ProductDTO createProduct(@RequestBody ProductDTO productRequestDTO) {
-        ProductDTO ProductResponseDTO = new ProductDTO();
-
-        return ProductResponseDTO;
+    public ProductDTO createProduct(@RequestBody ProductDTO productRequestDTO) {
+        Product savedProduct = productService.createProduct(productRequestDTO.convertToProduct());
+        return savedProduct.convertToProductDTO();
     }
 
     @GetMapping("/products/{id}")
@@ -66,15 +65,25 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
-    public ProductDTO updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productRequestDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productRequestDTO) {
 //        ProductDTO productResponseDTO = new ProductDTO();
 
         Product product = productService.replaceProduct(productRequestDTO.convertToProduct(), id);
 
         if (product != null) {
-            return product.convertToProductDTO();
+            return new ResponseEntity<>(product.convertToProductDTO(), HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
+        boolean isDeleted = productService.deleteProduct(id);
+        if (isDeleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
