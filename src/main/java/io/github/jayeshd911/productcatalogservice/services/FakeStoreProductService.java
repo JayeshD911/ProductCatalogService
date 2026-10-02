@@ -102,4 +102,11 @@ public class FakeStoreProductService implements IProductService {
         }
         return null;
     }
+
+    @Override
+    public boolean deleteProduct(Long id) {
+        return false;
+    }
+
+
 }
