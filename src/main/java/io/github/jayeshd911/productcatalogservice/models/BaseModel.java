@@ -1,9 +1,6 @@
 package io.github.jayeshd911.productcatalogservice.models;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +16,8 @@ public abstract class BaseModel {
     private Long id;
     private Date createdAt;
     private Date updatedAt;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private State state;
 
 }
