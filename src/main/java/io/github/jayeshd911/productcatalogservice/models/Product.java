@@ -3,7 +3,6 @@ package io.github.jayeshd911.productcatalogservice.models;
 import io.github.jayeshd911.productcatalogservice.dtos.CategoryDTO;
 import io.github.jayeshd911.productcatalogservice.dtos.FakestoreProductDTO;
 import io.github.jayeshd911.productcatalogservice.dtos.ProductDTO;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -17,7 +16,7 @@ public class Product extends BaseModel {
     private String description;
     private Double price;
     private String imageUrl;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Category category;
 
     public FakestoreProductDTO convertTofakestoreProductDTO() {
@@ -43,6 +42,7 @@ public class Product extends BaseModel {
         dto.setDescription(this.getDescription());
         dto.setPrice(this.getPrice());
         dto.setImageUrl(this.getImageUrl());
+        dto.setState(this.getState());
         if (this.getCategory() != null) {
             CategoryDTO categoryDTO = new CategoryDTO();
             categoryDTO.setId(this.getCategory().getId());
