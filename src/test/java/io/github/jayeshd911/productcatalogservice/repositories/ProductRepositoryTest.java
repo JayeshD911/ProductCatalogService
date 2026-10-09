@@ -23,6 +23,9 @@ public class ProductRepositoryTest {
         List<Product> products = productRepository.findProductByPriceBetween(40.0, 100.0);
 
         System.out.println("Products found between price 40.0 and 100.0: " + products.size());
+
+        String description = productRepository.getDescrioptionWhereId(4L);
+        System.out.println("Description of product with ID 4: " + description);
     }
 
 }
