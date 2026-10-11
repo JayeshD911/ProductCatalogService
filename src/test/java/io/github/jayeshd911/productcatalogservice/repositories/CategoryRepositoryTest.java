@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -31,6 +32,19 @@ class CategoryRepositoryTest {
             System.out.println("Products: " + category.getProducts());
         } else {
             System.out.println("Category not found");
+        }
+    }
+
+    @Test
+    @Transactional
+    public void NPlusOneProblemTest() {
+        // This test is to demonstrate the N+1 problem
+        // Fetch all categories and their products
+        List<Category> categories = categoryRepository.findAll();
+
+        for (Category category : categories) {
+            System.out.println("Category: " + category.getName());
+            System.out.println("Products: " + category.getProducts());
         }
     }
 
