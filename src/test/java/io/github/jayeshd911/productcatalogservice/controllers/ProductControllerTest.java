@@ -77,6 +77,21 @@ class ProductControllerTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
-
-
 }
+
+/*
+MockMvc tests are a way to test your Spring MVC controllers
+without starting the full server.
+
+They simulate HTTP requests (GET, POST, PUT…) and let you test:
+- Controller endpoints
+- Request validation
+- Request/response structure
+- HTTP status codes
+- JSON serialization/deserialization
+- Interactions with services (via mocks)
+
+
+They are fast, lightweight, and focused.
+
+ */
